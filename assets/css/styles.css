@@ -1,0 +1,405 @@
+/* assets/css/styles.css - Complete Sanskrit Dictionary Styles */
+
+:root {
+    --primary-blue: #0F2A4D;
+    --cream-bg: #F5F1E8;
+    --white: #FFFFFF;
+    --text-dark: #2D3748;
+    --text-light: #718096;
+    --accent-gold: #9B7C56;
+    --header-heading: #1B3A5C;
+    --input-bg: #E3EFF8;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Roboto Condensed', Arial, sans-serif;
+    background-color: var(--cream-bg);
+    color: var(--text-dark);
+    line-height: 1.6;
+}
+
+.container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+/* Search Header Section */
+.search-header {
+    background-color: var(--primary-blue);
+    padding: 3rem 2rem;
+    border-radius: 12px;
+    margin-bottom: 2rem;
+    text-align: center;
+}
+
+.search-header h1 {
+    color: var(--white);
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.search-header .subtitle {
+    color: var(--accent-gold);
+    font-size: 1.1rem;
+    margin-bottom: 2rem;
+}
+
+/* Transliteration Info Bar */
+.translit-info {
+    background-color: rgba(255,255,255,0.1);
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    margin-bottom: 1.5rem;
+}
+
+.translit-info p {
+    color: #E0E0E0;
+    font-size: 0.9rem;
+}
+
+/* Search Input Container */
+.search-container {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.search-input-wrapper {
+    position: relative;
+}
+
+#searchInput {
+    width: 100%;
+    padding: 1rem 1.5rem;
+    font-size: 1.3rem;
+    border: none;
+    border-radius: 10px;
+    background-color: var(--white);
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+}
+
+#searchInput:focus {
+    outline: none;
+    box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+}
+
+#searchInput::placeholder {
+    color: #A0AEC0;
+}
+
+.transliterated-display {
+    margin-top: 0.75rem;
+    padding: 0.75rem 1rem;
+    background-color: rgba(255,255,255,0.1);
+    border-radius: 6px;
+    min-height: 3.5rem;
+}
+
+.display-row {
+    display: flex;
+    gap: 2rem;
+    margin-bottom: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.display-label {
+    color: var(--accent-gold);
+    font-weight: bold;
+    min-width: 100px;
+}
+
+.display-value {
+    color: var(--white);
+    font-size: 1.1rem;
+    flex: 1;
+}
+
+.dev-display {
+    font-family: 'Tiro Devanagari Sanskrit', serif;
+    font-size: 1.4rem;
+}
+
+/* Results Grid */
+.results-section {
+    margin-top: 2rem;
+}
+
+.results-section h2 {
+    color: var(--header-heading);
+    margin-bottom: 1.5rem;
+    font-size: 1.8rem;
+}
+
+.dictionary-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+}
+
+.dict-card {
+    background-color: var(--white);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.08);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.dict-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.12);
+}
+
+/* Collapsible Card Styles */
+.dict-header {
+    padding: 1rem 1.5rem;
+    color: var(--white);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    position: relative;
+    transition: background-color 0.15s ease;
+}
+
+.dict-header:hover {
+    opacity: 0.95;
+}
+
+.dict-header h3 {
+    font-size: 1.2rem;
+    margin-bottom: 0.25rem;
+    z-index: 1;
+}
+
+.dict-header p {
+    font-size: 0.85rem;
+    opacity: 0.9;
+    z-index: 1;
+}
+
+.dict-count-badge {
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.25rem;
+    background-color: rgba(255, 255, 255, 0.2);
+    color: #fff;
+    margin-left: 0.75rem;
+    min-width: 3rem;
+    text-align: center;
+    display: inline-block;
+    z-index: 1;
+}
+
+.dict-toggle-arrow {
+    position: absolute;
+    right: 1rem;
+    transition: transform 0.3s ease;
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 0.8rem;
+    z-index: 1;
+}
+
+.dict-card.collapsed .dict-toggle-arrow {
+    transform: rotate(-90deg);
+}
+
+.dict-card.collapsed .dict-body {
+    display: none;
+}
+
+/* Badge variations for match counts */
+.dict-count-badge.no-match {
+    background-color: rgba(255, 255, 255, 0.1);
+    opacity: 0.5;
+}
+
+.dict-count-badge.has-match {
+    background-color: rgba(255, 255, 255, 0.3);
+    font-weight: 700;
+}
+
+/* Dictionary-specific header colors */
+.dict-header.monier { background-color: #2C5282; }
+.dict-header.apt { background-color: #2D3748; }
+.dict-header.apt-hindi { background-color: #276749; }
+.dict-header.wilson { background-color: #5B21B6; }
+.dict-header.cappeller { background-color: #742A2A; }
+.dict-header.mcdonell { background-color: #8B4789; }
+.dict-header.mw-extended { background-color: #1A365D; }
+.dict-header.lanman { background-color: #319795; }
+.dict-header.apte-english { background-color: #5A67D8; }
+.dict-header.goldstucker { background-color: #D97706; }
+.dict-header.mw-english { background-color: #E11D48; }
+.dict-header.benfey { background-color: #16A34A; }
+.dict-header.bharati { background-color: #974C5E; }
+.dict-header.mci { background-color: #2F4C39; }
+.dict-header.inm { background-color: #A16AD1; }
+.dict-header.bhs { background-color: #9BCC9E; }
+.dict-header.ieg { background-color: #D05C39; }
+.dict-header.acc { background-color: #3D426B; }
+.dict-header.armh { background-color: #EF9967; }
+.dict-header.vcp { background-color: #BBA151; }
+.dict-header.shs { background-color: #BCBC82; }
+.dict-header.skd { background-color: #D69759; }
+.dict-header.pwg { background-color: #CFAC94; }
+.dict-header.gra { background-color: #D3B8A1; }
+.dict-header.pw { background-color: #E56E90; }
+.dict-header.ccs { background-color: #EB618F; }
+.dict-header.sch { background-color: #75655A; }
+.dict-header.bur { background-color: #9AE2E3; }
+.dict-header.stc { background-color: #E99FAA; }
+.dict-header.mwe { background-color: #63B7B7; }
+.dict-header.ae { background-color: #D3C7A2; }
+.dict-header.bor { background-color: #944547; }
+.dict-header.pui { background-color: #9ECB91; }
+.dict-header.pe { background-color: #6ECDDB; }
+.dict-header.pgn { background-color: #E5C768; }
+.dict-header.krm { background-color: #D05C39; }
+.dict-header.vei { background-color: #FFA38C; }
+.dict-header.bop { background-color: #A2CFDD; }
+
+
+.dict-body {
+    padding: 1.5rem;
+    min-height: 150px;
+}
+
+.placeholder-text {
+    color: var(--text-light);
+    font-style: italic;
+    text-align: center;
+    padding: 2rem;
+}
+
+/* Entry cards within dictionary bodies */
+.entries-list {
+    margin-top: 0.75rem;
+}
+
+.entry-card {
+    margin-bottom: 1rem;
+    padding: 1rem;
+    background: #f7f9fa;
+    border-radius: 8px;
+    border-left: 3px solid #5B21B6;
+}
+
+.entry-card strong {
+    color: inherit;
+}
+
+.more-link em {
+    font-style: normal;
+    font-size: 0.85rem;
+    cursor: pointer;
+}
+
+/* Status Messages */
+.status-message {
+    padding: 1rem;
+    border-radius: 6px;
+    margin-top: 1rem;
+    display: none;
+}
+
+.status-message.error {
+    display: block;
+    background-color: #FED7D7;
+    color: #C53030;
+    border-left: 4px solid #C53030;
+}
+
+.status-message.success {
+    display: block;
+    background-color: #C6F6D5;
+    color: #22543D;
+    border-left: 4px solid #22543D;
+}
+
+/* Results Summary in section */
+.results-summary {
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+    color: #1B3A5C;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .container {
+        padding: 1rem;
+    }
+    
+    .search-header {
+        padding: 2rem 1rem;
+    }
+    
+    .search-header h1 {
+        font-size: 2rem;
+    }
+    
+    #searchInput {
+        font-size: 1.1rem;
+        padding: 0.875rem 1rem;
+    }
+    
+    .dictionary-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .display-row {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    
+    .dict-header h3 {
+        font-size: 1rem;
+    }
+    
+    .dict-header p {
+        font-size: 0.75rem;
+    }
+}
+
+/* Input Mode Tabs */
+.input-mode-tabs {
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.tab-btn {
+    padding: 0.5rem 1.5rem;
+    border: none;
+    border-radius: 6px 6px 0 0;
+    background-color: rgba(255,255,255,0.1);
+    color: #E0E0E0;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 0.95rem;
+    transition: all 0.2s ease;
+}
+
+.tab-btn.active {
+    background-color: var(--white);
+    color: var(--primary-blue);
+    font-weight: 600;
+}
+
+.tab-btn:hover:not(.active) {
+    background-color: rgba(255,255,255,0.2);
+}
+
+.search-input-wrapper {
+    position: relative;
+    border-radius: 0 0 10px 10px;
+    overflow: hidden;
+}

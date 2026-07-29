@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sanskrit Dictionary - Multi-Dictionary Search</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@400;700&family=Tiro+Devanagari+Sanskrit&display=swap" rel="stylesheet">
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="assets/css/styles.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Search Header -->
+        <header class="search-header">
+            <h1>Sanskrit Dictionary</h1>
+            <p class="subtitle">Multi-Dictionary Search - Monier-Williams | Apte | Apte Hindi | Wilson | Cappeller</p>
+            
+            <div class="translit-info">
+                <p>✓ Supports Devanagari, IAST, SLP1 | ✓ Handles consonants with/without halant</p>
+            </div>
+            
+            <div class="search-container">
+                <div class="input-mode-tabs">
+                    <button class="tab-btn active" data-mode="devanagari" onclick="setInputMode('devanagari')">देवनागरी</button>
+                    <button class="tab-btn" data-mode="iast" onclick="setInputMode('iast')">IAST</button>
+                    <button class="tab-btn" data-mode="slp1" onclick="setInputMode('slp1')">SLP1</button>
+                </div>
+                
+                <div class="search-input-wrapper">
+                    <input 
+                        type="text" 
+                        id="searchInput" 
+                        placeholder="Enter word in selected mode"
+                        autocomplete="off"
+                    >
+                </div>
+                
+                <div class="transliterated-display" id="transliteratedDisplay">
+                    <div class="display-row">
+                        <span class="display-label">Devanagari:</span>
+                        <span class="display-value dev-display" id="devOutput">-</span>
+                    </div>
+                    <div class="display-row">
+                        <span class="display-label">IAST:</span>
+                        <span class="display-value" id="iastOutput">-</span>
+                    </div>
+                    <div class="display-row">
+                        <span class="display-label">SLP1:</span>
+                        <span class="display-value" id="slp1Output">-</span>
+                    </div>
+                </div>
+            </div>        
+                    
+        </header>
+        
+        <!-- Dictionary Cards -->
+        <section class="dictionaries-section">
+            <h2>Dictionaries</h2>
+            <div class="dictionary-grid">
+                <article class="dict-card" id="card-monier">
+                    <div class="dict-header monier">
+                        <h3>Monier-Williams</h3>
+                        <p>A Sanskrit-English Dictionary (1899)</p>
+                        <span class="dict-count-badge" id="mwCount">Loading...</span>
+                    </div>
+                    <div class="dict-body" id="body-monier">
+                        <p class="placeholder-text">Awaiting search...</p>
+                    </div>
+                </article>
+                
+                <article class="dict-card" id="card-apte">
+                    <div class="dict-header apt">
+                        <h3>Apte</h3>
+                        <p>The Practical Sanskrit-English Dictionary</p>
+                        <span class="dict-count-badge" id="apteCount">Loading...</span>
+                    </div>
+                    <div class="dict-body" id="body-apte">
+                        <p class="placeholder-text">Awaiting search...</p>
+                    </div>
+                </article>
+                
+                <article class="dict-card" id="card-apteHindi">
+                    <div class="dict-header apt-hindi">
+                        <h3>Apte Hindi</h3>
+                        <p>संस्कृत-हिंदी शब्दकोश</p>
+                        <span class="dict-count-badge" id="apteHindiCount">Loading...</span>
+                    </div>
+                    <div class="dict-body" id="body-apteHindi">
+                        <p class="placeholder-text">Awaiting search...</p>
+                    </div>
+                </article>
+                
+                <article class="dict-card" id="card-wilson">
+                    <div class="dict-header wilson">
+                        <h3>Wilson</h3>
+                        <p>Sanskrit-English Dictionary (1819)</p>
+                        <span class="dict-count-badge" id="wilsonCount">Loading...</span>
+                    </div>
+                    <div class="dict-body" id="body-wilson">
+                        <p class="placeholder-text">Awaiting search...</p>
+                    </div>
+                </article>
+                
+                <article class="dict-card" id="card-cappeller">
+                    <div class="dict-header cappeller">
+                        <h3>Cappeller</h3>
+                        <p>Sanskrit-English Lexicon (1891)</p>
+                        <span class="dict-count-badge" id="cappellerCount">Loading...</span>
+                    </div>
+                    <div class="dict-body" id="body-cappeller">
+                        <p class="placeholder-text">Awaiting search...</p>
+                    </div>
+                </article>
+                
+                <!-- McDonell Card -->
+                <article class="dict-card" id="card-mcdonell">
+                    <div class="dict-header mcdonell">
+                        <h3>McDonell</h3>
+                        <p>Shorter Sanskrit-English Dictionary</p>
+                        <span class="dict-count-badge" id="mcdonellCount">Not loaded</span>
+                        <span class="dict-toggle-arrow">▾</span>
+                    </div>
+                    <div class="dict-body" id="body-mcdonell">
+                        <p class="placeholder-text">Awaiting search...</p>
+                    </div>
+                </article>
+                
+                <article class="dict-card" id="card-mw-extended">
+                    <div class="dict-header mw-extended">
+                        <h3>Monier-Williams (Extended)</h3>
+                        <p>Comprehensive Edition (195,000+ words)</p>
+                        <span class="dict-count-badge" id="mwExtendedCount">Not loaded</span>
+                        <span class="dict-toggle-arrow">▾</span>
+                    </div>
+                    <div class="dict-body" id="body-mw-extended">
+                        <p class="placeholder-text">Awaiting search...</p>
+                    </div>
+                </article>
+
+                <!-- 8. Lanman Sanskrit Reader -->
+                <article class="dict-card" id="card-lanman">
+                    <div class="dict-header lanman">
+                        <h3>Lanman</h3>
+                        <p>Sanskrit Reader Vocabulary (1884)</p>
+                        <span class="dict-count-badge" id="lanmanCount">Not loaded</span>
+                        <span class="dict-toggle-arrow">▾</span>
+                    </div>
+                    <div class="dict-body" id="body-lanman">
+                        <p class="placeholder-text">Awaiting search...</p>
+                    </div>
+                </article>
+
+                <!-- 9. Apte English-Sanskrit -->
+                <article class="dict-card" id="card-ae">
+                    <div class="dict-header ae">
+                        <h3>Apte English-Sanskrit</h3>
+                        <p>Student's Dictionary (1920)</p>
+                        <span class="dict-count-badge" id="aeCount">Loading...</span>
+                        <span class="dict-toggle-arrow">▾</span>
+                    </div>
+                    <div class="dict-body" id="body-ae">
+                        <p class="placeholder-text">Awaiting search...</p>
+                    </div>
+                </article>
+
+                <!-- 10. Goldstücker -->
+                <article class="dict-card" id="card-goldstucker">
+                    <div class="dict-header goldstucker">
+                        <h3>Goldstücker</h3>
+                        <p>Sanskrit-English (1856)</p>
+                        <span class="dict-count-badge" id="goldstuckerCount">Loading...</span>
+                        <span class="dict-toggle-arrow">▾</span>
+                    </div>
+                    <div class="dict-body" id="body-goldstucker">
+                        <p class="placeholder-text">Awaiting search...</p>
+                    </div>
+                </article>
+
+                <!-- 11. Monier-Williams English-Sanskrit -->
+                <article class="dict-card" id="card-mwe">
+                    <div class="dict-header mwe">
+                        <h3>MW English-Sanskrit</h3>
+                        <p>Monier-Williams (1851)</p>
+                        <span class="dict-count-badge" id="mweCount">Loading...</span>
+                        <span class="dict-toggle-arrow">▾</span>
+                    </div>
+                    <div class="dict-body" id="body-mwe">
+                        <p class="placeholder-text">Awaiting search...</p>
+                    </div>
+                </article>
+
+                <!-- 12. Benfey -->
+                <article class="dict-card" id="card-benfey">
+                    <div class="dict-header benfey">
+                        <h3>Benfey</h3>
+                        <p>Sanskrit-English (1866)</p>
+                        <span class="dict-count-badge" id="benfeyCount">Not loaded</span>
+                        <span class="dict-toggle-arrow">▾</span>
+                    </div>
+                    <div class="dict-body" id="body-benfey">
+                        <p class="placeholder-text">Awaiting search...</p>
+                    </div>
+                </article>
+
+                <!-- 13. Bharati -->
+                <article class="dict-card" id="card-bharati">
+                    <div class="dict-header bharati">
+                        <h3>Bharati</h3>
+                        <p>Sanskrit-Sanskrit (1866)</p>
+                        <span class="dict-count-badge" id="bharatiCount">Not loaded</span>
+                        <span class="dict-toggle-arrow">▾</span>
+                    </div>
+                    <div class="dict-body" id="body-bharati">
+                        <p class="placeholder-text">Awaiting search...</p>
+                    </div>
+                </article>
+
+                <!-- 14. MCI -->
+                <article class="dict-card" id="card-mci">
+                    <div class="dict-header mci">
+                        <h3>MCI</h3>
+                        <p>Mahabharata Cultural Index (1993)</p>
+                        <span class="dict-count-badge" id="mciCount">Not loaded</span>
+                        <span class="dict-toggle-arrow">▾</span>
+                    </div>
+                    <div class="dict-body" id="body-mci">
+                        <p class="placeholder-text">Awaiting search...</p>
+                    </div>
+                </article>
+
+                <!-- 15. INM -->
+                <article class="dict-card" id="card-inm">
+                    <div class="dict-header inm">
+                        <h3>INM</h3>
+                        <p>Mahabharata Name Index (1904)</p>
+                        <span class="dict-count-badge" id="inmCount">Not loaded</span>
+                        <span class="dict-toggle-arrow">▾</span>
+                    </div>
+                    <div class="dict-body" id="body-inm">
+                        <p class="placeholder-text">Awaiting search...</p>
+                    </div>
+                </article>
+
+                <!-- 16. BHS -->
+                <article class="dict-card" id="card-bhs">
+                    <div class="dict-header bhs">
+                        <h3>BHS</h3>
+                        <p>Edgerton Buddhist Sanskrit (1953)</p>
+                        <span class="dict-count-badge" id="bhsCount">Not loaded</span>
+                        <span class="dict-toggle-arrow">▾</span>
+                    </div>
+                    <div class="dict-body" id="body-bhs">
+                        <p class="placeholder-text">Awaiting search...</p>
+                    </div>
+                </article>
+
+                <!-- 17. IEG -->
+                <article class="dict-card" id="card-ieg">
+                    <div class="dict-header ieg">
+                        <h3>IEG</h3>
+                        <p>Indian Epigraphical Glossary (1966)</p>
+                        <span class="dict-count-badge" id="iegCount">Not loaded</span>
+                        <span class="dict-toggle-arrow">▾</span>
+                    </div>
+                    <div class="dict-body" id="body-ieg">
+                        <p class="placeholder-text">Awaiting search...</p>
+                    </div>
+                </article>
+
+                <!-- 18. ACC -->
+                <article class="dict-card" id="card-acc">
+                    <div class="dict-header acc">
+                        <h3>ACC</h3>
+                        <p>Aufrecht’s Catalogus Catalogorum (1962)</p>
+                        <span class="dict-count-badge" id="accCount">Not loaded</span>
+                        <span class="dict-toggle-arrow">▾</span>
+                    </div>
+                    <div class="dict-body" id="body-acc">
+                        <p class="placeholder-text">Awaiting search...</p>
+                    </div>
+                </article>
+
+                <!-- 19. ARMH -->
+                <article class="dict-card" id="card-armh">
+                    <div class="dict-header armh">
+                        <h3>ARMH</h3>
+                        <p>Abhidhānaratnamālā of Halāyudha (1861)</p>
+                        <span class="dict-count-badge" id="armhCount">Not loaded</span>
+                        <span class="dict-toggle-arrow">▾</span>
+                    </div>
+                    <div class="dict-body" id="body-armh">
+                        <p class="placeholder-text">Awaiting search...</p>
+                    </div>
+                </article>
+
+                <!-- 20. VCP -->
+                <article class="dict-card" id="card-vcp">
+                    <div class="dict-header vcp">
+                        <h3>VCP</h3>
+                        <p>Vacaspatyam (1873)</p>
+                        <span class="dict-count-badge" id="vcpCount">Not loaded</span>
+                        <span class="dict-toggle-arrow">▾</span>
+                    </div>
+                    <div class="dict-body" id="body-vcp">
+                        <p class="placeholder-text">Awaiting search...</p>
+                    </div>
+                </article>
+
+                <!-- 21. SHS -->
+                <article class="dict-card" id="card-shs ">
+                    <div class="dict-header shs">
+                        <h3>SHS</h3>
+                        <p>Shabda-Sagara Sanskrit-English Dictionary (1900)</p>
+                        <span class="dict-count-badge" id="shsCount">Not loaded</span>
+                        <span class="dict-toggle-arrow">▾</span>
+                    </div>
+                    <div class="dict-body" id="body-shs">
+                        <p class="placeholder-text">Awaiting search...</p>
+                    </div>
+                </article>
+
+                <!-- 22. SKD -->
+                <article class="dict-card" id="card-skd">
+                    <div class="dict-header skd">
+                        <h3>SKD</h3>
+                        <p>Sabda-kalpadruma (1886)</p>
+                        <span class="dict-count-badge" id="skdCount">Not loaded</span>
+                        <span class="dict-toggle-arrow">▾</span>
+                    </div>
+                    <div class="dict-body" id="body-skd">
+                        <p class="placeholder-text">Awaiting search...</p>
+                    </div>
+                </article>
+
+                <!-- 23. PWG -->
+                <article class="dict-card" id="card-pwg">
+                    <div class="dict-header pwg">
+                        <h3>PWG</h3>
+                        <p>Böhtlingk and Roth Great Petersburg Dictionary (1855)</p>
+                        <span class="dict-count-badge" id="pwgCount">Not loaded</span>
+                        <span class="dict-toggle-arrow">▾</span>
+                    </div>
+                    <div class="dict-body" id="body-pwg">
+                        <p class="placeholder-text">Awaiting search...</p>
+                    </div>
+                </article>
+                
+                <!-- 24. GRA -->
+                <article class="dict-card" id="card-gra">
+                    <div class="dict-header gra">
+                        <h3>GRA</h3>
+                        <p>Grassmann Dictionary of the Rig Veda (1873)</p>
+                        <span class="dict-count-badge" id="graCount">Not loaded</span>
+                        <span class="dict-toggle-arrow">▾</span>
+                    </div>
+                    <div class="dict-body" id="body-gra">
+                        <p class="placeholder-text">Awaiting search...</p>
+                    </div>
+                </article>
+
+                <!-- 25. PW -->
+                <article class="dict-card" id="card-pw">
+                    <div class="dict-header pw">
+                        <h3>PW</h3>
+                        <p>Böhtlingk Sanskrit Dictionary in a shorter version (1879)</p>
+                        <span class="dict-count-badge" id="pwCount">Not loaded</span>
+                        <span class="dict-toggle-arrow">▾</span>
+                    </div>
+                    <div class="dict-body" id="body-pw">
+                        <p class="placeholder-text">Awaiting search...</p>
+                    </div>
+                </article>
+
+                <!-- 26. CCS -->
+                <article class="dict-card" id="card-ccs">
+                    <div class="dict-header ccs">
+                        <h3>CCS</h3>
+                        <p>Cappeller Sanskrit Dictionary (1887)</p>
+                        <span class="dict-count-badge" id="ccsCount">Not loaded</span>
+                        <span class="dict-toggle-arrow">▾</span>
+                    </div>
+                    <div class="dict-body" id="body-ccs">
+                        <p class="placeholder-text">Awaiting search...</p>
+                    </div>
+                </article>
+
+                <!-- 27. SCH -->
+                <article class="dict-card" id="card-sch">
+                    <div class="dict-header sch">
+                        <h3>SCH</h3>
+                        <p>Schmidt Addenda to the Sanskrit Dictionary (1928)</p>
+                        <span class="dict-count-badge" id="schCount">Not loaded</span>
+                        <span class="dict-toggle-arrow">▾</span>
+                    </div>
+                    <div class="dict-body" id="body-sch">
+                        <p class="placeholder-text">Awaiting search...</p>
+                    </div>
+                </article>
+
+                <!-- 28. BUR -->
+                <article class="dict-card" id="card-bur">
+                    <div class="dict-header bur">
+                        <h3>BUR</h3>
+                        <p>Burnouf Dictionnaire Sanscrit-Français (1866)</p>
+                        <span class="dict-count-badge" id="burCount">Not loaded</span>
+                        <span class="dict-toggle-arrow">▾</span>
+                    </div>
+                    <div class="dict-body" id="body-bur">
+                        <p class="placeholder-text">Awaiting search...</p>
+                    </div>
+                </article>
+
+                <!-- 29. STC -->
+                <article class="dict-card" id="card-stc">
+                    <div class="dict-header stc">
+                        <h3>STC</h3>
+                        <p>Stchoupak Dictionnaire Sanscrit-Français (1932)</p>
+                        <span class="dict-count-badge" id="stcCount">Not loaded</span>
+                        <span class="dict-toggle-arrow">▾</span>
+                    </div>
+                    <div class="dict-body" id="body-stc">
+                        <p class="placeholder-text">Awaiting search...</p>
+                    </div>
+                </article>
+
+                <!-- 30. MWE -->
+                <article class="dict-card" id="card-mwe">
+                    <div class="dict-header mwe">
+                        <h3>MWE</h3>
+                        <p>Monier-Williams English-Sanskrit Dictionary (1899)</p>
+                        <span class="dict-count-badge" id="mweCount">Not loaded</span>
+                        <span class="dict-toggle-arrow">▾</span>
+                    </div>
+                    <div class="dict-body" id="body-mwe">
+                        <p class="placeholder-text">Awaiting search...</p>
+                    </div>
+                </article>
+
+                <!-- 31. AE -->
+                <article class="dict-card" id="card-ae">
+                    <div class="dict-header ae">
+                        <h3>AE</h3>
+                        <p>Apte Student's English-Sanskrit Dictionary (1920)</p>
+                        <span class="dict-count-badge" id="aeCount">Not loaded</span>
+                        <span class="dict-toggle-arrow">▾</span>
+                    </div>
+                    <div class="dict-body" id="body-ae">
+                        <p class="placeholder-text">Awaiting search...</p>
+                    </div>
+                </article>
+
+                <!-- 32. BOR -->
+                <article class="dict-card" id="card-bor">
+                    <div class="dict-header bor">
+                        <h3>BOR</h3>
+                        <p>Borooah English-Sanskrit Dictionary (1877)</p>
+                        <span class="dict-count-badge" id="borCount">Not loaded</span>
+                        <span class="dict-toggle-arrow">▾</span>
+                    </div>
+                    <div class="dict-body" id="body-bor">
+                        <p class="placeholder-text">Awaiting search...</p>
+                    </div>
+                </article>
+
+                <!-- 33. PUI -->
+                <article class="dict-card" id="card-pui">
+                    <div class="dict-header pui">
+                        <h3>PUI</h3>
+                        <p>The Purana Index (1951)</p>
+                        <span class="dict-count-badge" id="puiCount">Not loaded</span>
+                        <span class="dict-toggle-arrow">▾</span>
+                    </div>
+                    <div class="dict-body" id="body-pui">
+                        <p class="placeholder-text">Awaiting search...</p>
+                    </div>
+                </article>
+
+                <!-- 34. PE -->
+                <article class="dict-card" id="card-pe">
+                    <div class="dict-header pe">
+                        <h3>PE</h3>
+                        <p>Puranic Encyclopedia (1975)</p>
+                        <span class="dict-count-badge" id="peCount">Not loaded</span>
+                        <span class="dict-toggle-arrow">▾</span>
+                    </div>
+                    <div class="dict-body" id="body-pe">
+                        <p class="placeholder-text">Awaiting search...</p>
+                    </div>
+                </article>
+
+                <!-- 35. PGN -->
+                <article class="dict-card" id="card-pgn">
+                    <div class="dict-header pgn">
+                        <h3>PGN</h3>
+                        <p>Gupta Inscriptions (1978)</p>
+                        <span class="dict-count-badge" id="pgnCount">Not loaded</span>
+                        <span class="dict-toggle-arrow">▾</span>
+                    </div>
+                    <div class="dict-body" id="body-pgn">
+                        <p class="placeholder-text">Awaiting search...</p>
+                    </div>
+                </article>
+
+                <!-- 36. KRM -->
+                <article class="dict-card" id="card-krm">
+                    <div class="dict-header krm">
+                        <h3>KRM</h3>
+                        <p>Kṛdantarūpamālā (1965-1971)</p>
+                        <span class="dict-count-badge" id="krmCount">Not loaded</span>
+                        <span class="dict-toggle-arrow">▾</span>
+                    </div>
+                    <div class="dict-body" id="body-krm">
+                        <p class="placeholder-text">Awaiting search...</p>
+                    </div>
+                </article>
+
+                <!-- 37. VEI -->
+                <article class="dict-card" id="card-vei">
+                    <div class="dict-header vei">
+                        <h3>VEI</h3>
+                        <p>Aufrecht’s Catalogus Catalogorum (1962)</p>
+                        <span class="dict-count-badge" id="veiCount">Not loaded</span>
+                        <span class="dict-toggle-arrow">▾</span>
+                    </div>
+                    <div class="dict-body" id="body-vei">
+                        <p class="placeholder-text">Awaiting search...</p>
+                    </div>
+                </article>
+
+                <!-- 38. BOP -->
+                <article class="dict-card" id="card-bop">
+                    <div class="dict-header bop">
+                        <h3>BOP</h3>
+                        <p>	Bopp Glossarium Sanscritum (1847)</p>
+                        <span class="dict-count-badge" id="bopCount">Not loaded</span>
+                        <span class="dict-toggle-arrow">▾</span>
+                    </div>
+                    <div class="dict-body" id="body-bop">
+                        <p class="placeholder-text">Awaiting search...</p>
+                    </div>
+                </article>
+
+            </div>
+        </section>
+        
+        <!-- Search Results -->
+        <section class="results-section" id="resultsSection">
+            <h2>Search Results</h2>
+            <div id="resultsContainer">
+                <p class="placeholder-text">Start typing to search dictionaries</p>
+            </div>
+        </section>
+    </div>
+    
+    <!-- Scripts -->
+    <script src="assets/js/transliterate.js"></script>
+    <script src="assets/js/dictionary.js"></script>
+    <script src="assets/js/app.js"></script>
+</body>
+</html>
