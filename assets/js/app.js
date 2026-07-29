@@ -97,7 +97,7 @@
 
         const DATA_URL = IS_LOCAL 
             ? 'dictionaries' 
-            : 'https://nandatara/skd-data/dictionaries';
+            : 'https://cdn.jsdelivr.net/gh/nandatara/skd-data/dictionaries';
         
         await window.DictionaryManager.initialize({
             'Wilson': {
