@@ -91,7 +91,13 @@
     // Initialize on DOM ready
     document.addEventListener('DOMContentLoaded', async () => {
         console.log('Initializing Sanskrit Dictionary App...');
-        const DATA_URL = 'https://jsdelivr.net';
+        
+        // Automatically switch between local testing and production CDN
+        const IS_LOCAL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' || window.location.protocol === 'file:';
+
+        const DATA_URL = IS_LOCAL 
+            ? 'dictionaries' 
+            : 'https://jsdelivr.net';
         
         await window.DictionaryManager.initialize({
             'Wilson': {
