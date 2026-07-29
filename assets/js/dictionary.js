@@ -468,10 +468,6 @@ formatEntryCard(entry, index, dictName) {
         return div.innerHTML;
     }
 
-    /**
-     * Dynamically fetch and cache a specific chunk for Monier-Williams Extended
-     * Uses mathematical routing: chunk = Math.ceil(id / 60000)
-     */
 /**
      * Dynamically fetch and cache a specific chunk for Monier-Williams Extended
      * Uses mathematical routing: chunk = Math.ceil(id / 60000)
@@ -491,16 +487,25 @@ formatEntryCard(entry, index, dictName) {
         }
         
         if (!dict.loadedChunks.has(chunkName)) {
+            // 1. Immediately flag as loaded/fetching to prevent the infinite loop if it fails
+            dict.loadedChunks.add(chunkName);
+            
             console.log(`Downloading missing chunk: ${chunkName}.json...`);
             try {
-                const response = await fetch(`dictionaries/${chunkName}.json`);
+                // 2. Use the dynamically assigned baseUrl (fallback to local if not set)
+                const base = this.baseUrl || 'dictionaries';
+                const response = await fetch(`${base}/${chunkName}.json`);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP Error: ${response.status}`);
+                }
+
                 const chunkData = await response.json();
                 
                 // BULLETPROOF PARSING: Gracefully handle different JSON wrapper structures
                 const textData = chunkData.data?.text || chunkData.data || chunkData;
                 Object.assign(dict.text, textData);
                 
-                dict.loadedChunks.add(chunkName);
             } catch (err) {
                 console.error(`Failed to load ${chunkName}:`, err);
                 return null;
@@ -508,7 +513,7 @@ formatEntryCard(entry, index, dictName) {
         }
         
         return dict.text[id];
-    }    
+    }      
 }
 
 // Global instance

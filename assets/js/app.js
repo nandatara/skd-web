@@ -98,6 +98,9 @@
         const DATA_URL = IS_LOCAL 
             ? 'dictionaries' 
             : 'https://cdn.jsdelivr.net/gh/nandatara/skd-data/dictionaries';
+
+            // Tell the DictionaryManager where the data repository lives
+            window.DictionaryManager.baseUrl = DATA_URL;
         
         await window.DictionaryManager.initialize({
             'Wilson': {
