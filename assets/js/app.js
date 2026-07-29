@@ -328,6 +328,7 @@
     
     // Setup search input handler
     function setupSearchHandler() {
+        let activeQuery = ''; 
         searchInput.addEventListener('input', debounce(async (e) => {
             const input = e.target.value.trim();
             
@@ -376,6 +377,9 @@
                 collapseLogic({});
                 
                 const results = await window.DictionaryManager.prefixSearchSLP1(detected.slp1);
+
+                 // If the user typed a new letter while the network was loading, stop processing this old request!
+                if (input !== activeQuery) return; 
                 
                 updateCardBadges(results);
                 collapseLogic(results);
@@ -395,7 +399,7 @@
                 slp1Output.textContent = 'Error';
                 resultsContainer.innerHTML = '<p class="placeholder-text" style="color:#C53030">Error during search</p>';
             }
-        }, 150));
+        }, 600));
     }
     
     // Update count badges
