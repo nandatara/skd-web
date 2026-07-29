@@ -93,11 +93,12 @@
         console.log('Initializing Sanskrit Dictionary App...');
         
         // Automatically switch between local testing and production CDN
-        const IS_LOCAL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' || window.location.protocol === 'file:';
+const IS_LOCAL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' || window.location.protocol === 'file:';
 
+        // Switch from jsdelivr to raw.githubusercontent to bypass file size limits
         const DATA_URL = IS_LOCAL 
             ? 'dictionaries' 
-            : 'https://cdn.jsdelivr.net/gh/nandatara/skd-data/dictionaries';
+            : 'https://raw.githubusercontent.com/nandatara/skd-data/main/dictionaries';
 
             // Tell the DictionaryManager where the data repository lives
             window.DictionaryManager.baseUrl = DATA_URL;
