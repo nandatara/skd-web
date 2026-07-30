@@ -483,9 +483,9 @@ formatEntryCard(entry, index, dictName) {
         // Map dictionaries to their prefix and specific chunk size
         const dictConfig = {
             'Monier-Williams Extended': { prefix: 'mw', size: 60000 },
-            'Apte Hindi':           { prefix: 'aptehindi', size: 60000 },
-            'SKD':                  { prefix: 'skd', size: 60000 },
-            'VCP':                  { prefix: 'vcp', size: 60000 },
+            'Apte Hindi':           { prefix: 'aptehindi', size: 38000 },
+            'SKD':                  { prefix: 'skd', size: 6100 },
+            'VCP':                  { prefix: 'vcp', size: 7000 },
             
             // The heavier dictionaries using smaller chunks
             'Monier-Williams':      { prefix: 'mw72', size: 30000 },
