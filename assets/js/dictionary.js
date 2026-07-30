@@ -122,8 +122,9 @@ class DictionaryManager {
             if (!dict.words_slp1) continue;
             
             const matches = [];
-            const isChunked = name === 'Monier-Williams Extended';
-            
+            const chunkedDicts = ['Monier-Williams Extended', 'Apte Hindi', 'SKD', 'VCP', 'Monier-Williams', 'PW', 'PWG'];
+            const isChunked = chunkedDicts.includes(name); 
+
             for (const [slp1Key, devKey] of Object.entries(dict.words_slp1)) {
                 if (slp1Key.startsWith(prefix)) {
                     const entryIds = dict.words[devKey]?.split(',');
@@ -134,7 +135,7 @@ class DictionaryManager {
                     
                     for (const id of entryIds) {
                         if (isChunked) {
-                            await this.fetchMwExtendedChunk(id);
+                            await this.fetchChunkedDictionary(name, id);
                         }
                         
                         const entry = dict.text[id];
@@ -472,27 +473,44 @@ formatEntryCard(entry, index, dictName) {
      * Dynamically fetch and cache a specific chunk for Monier-Williams Extended
      * Uses mathematical routing: chunk = Math.ceil(id / 60000)
      */
-    async fetchMwExtendedChunk(id) {
-        const dictName = 'Monier-Williams Extended';
+/**
+     * Dynamically fetch and cache a specific chunk for ANY chunked dictionary
+     */
+    async fetchChunkedDictionary(dictName, id) {
         const dict = this.dictionaries.get(dictName);
-        
         if (!dict) return null;
 
+        // Map dictionaries to their prefix and specific chunk size
+        const dictConfig = {
+            'Monier-Williams Extended': { prefix: 'mw', size: 60000 },
+            'Apte Hindi':           { prefix: 'aptehindi', size: 60000 },
+            'SKD':                  { prefix: 'skd', size: 60000 },
+            'VCP':                  { prefix: 'vcp', size: 60000 },
+            
+            // The heavier dictionaries using smaller chunks
+            'Monier-Williams':      { prefix: 'mw72', size: 30000 },
+            'PW':                   { prefix: 'pw', size: 30000 },
+            'PWG':                  { prefix: 'pwg', size: 30000 }
+        };
+
+        const config = dictConfig[dictName];
+        if (!config) return null; 
+
         const numericId = parseInt(id, 10);
-        const chunkIndex = Math.ceil(numericId / 60000);
-        const chunkName = `mw-${chunkIndex}`;
+        
+        // Calculate chunk index dynamically based on the specific dictionary's size limit
+        const chunkIndex = Math.ceil(numericId / config.size);
+        const chunkName = `${config.prefix}-${chunkIndex}`;
         
         if (!dict.loadedChunks) {
             dict.loadedChunks = new Set();
         }
         
         if (!dict.loadedChunks.has(chunkName)) {
-            // 1. Immediately flag as loaded/fetching to prevent the infinite loop if it fails
             dict.loadedChunks.add(chunkName);
             
             console.log(`Downloading missing chunk: ${chunkName}.json...`);
             try {
-                // 2. Use the dynamically assigned baseUrl (fallback to local if not set)
                 const base = this.baseUrl || 'dictionaries';
                 const response = await fetch(`${base}/${chunkName}.json`);
                 
@@ -502,7 +520,7 @@ formatEntryCard(entry, index, dictName) {
 
                 const chunkData = await response.json();
                 
-                // BULLETPROOF PARSING: Gracefully handle different JSON wrapper structures
+                // Bulletproof parsing
                 const textData = chunkData.data?.text || chunkData.data || chunkData;
                 Object.assign(dict.text, textData);
                 
@@ -513,8 +531,7 @@ formatEntryCard(entry, index, dictName) {
         }
         
         return dict.text[id];
-    }      
-}
+    }}
 
 // Global instance
 window.DictionaryManager = new DictionaryManager();

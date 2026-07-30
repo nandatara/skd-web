@@ -117,11 +117,11 @@ const IS_LOCAL = window.location.hostname === 'localhost' || window.location.hos
                 slp1Index: `${DATA_URL}/ap90_slp1_index.json`
             },
             'Apte Hindi': {
-                main: `${DATA_URL}/aptehindi.json`,
+                main: `${DATA_URL}/aptehindi-0.json`,
                 slp1Index: `${DATA_URL}/aptehindi_slp1_index.json`
             },
             'Monier-Williams': {
-                main: `${DATA_URL}/mw72.json`,
+                main: `${DATA_URL}/mw72-0.json`,
                 slp1Index: `${DATA_URL}/mw72_slp1_index.json`
             },
             'McDonell': { 
@@ -183,7 +183,7 @@ const IS_LOCAL = window.location.hostname === 'localhost' || window.location.hos
                 slp1Index: `${DATA_URL}/armh_slp1_index.json` 
             },
             'VCP': { 
-                main: `${DATA_URL}/vcp.json`,            
+                main: `${DATA_URL}/vcp-0.json`,            
                 slp1Index: `${DATA_URL}/vcp_slp1_index.json` 
             },
             'SHS': { 
@@ -191,11 +191,11 @@ const IS_LOCAL = window.location.hostname === 'localhost' || window.location.hos
                 slp1Index: `${DATA_URL}/shs_slp1_index.json` 
             },
             'SKD': { 
-                main: `${DATA_URL}/skd.json`,            
+                main: `${DATA_URL}/skd-0.json`,            
                 slp1Index: `${DATA_URL}/skd_slp1_index.json` 
             },
             'PWG': { 
-                main: `${DATA_URL}/pwg.json`,            
+                main: `${DATA_URL}/pwg-0.json`,            
                 slp1Index: `${DATA_URL}/pwg_slp1_index.json` 
             },
             'GRA': { 
@@ -203,7 +203,7 @@ const IS_LOCAL = window.location.hostname === 'localhost' || window.location.hos
                 slp1Index: `${DATA_URL}/gra_slp1_index.json` 
             },
             'PW': { 
-                main: `${DATA_URL}/pw.json`,            
+                main: `${DATA_URL}/pw-0.json`,            
                 slp1Index: `${DATA_URL}/pw_slp1_index.json` 
             },
             'CCS': { 
