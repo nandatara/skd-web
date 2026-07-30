@@ -470,24 +470,17 @@ formatEntryCard(entry, index, dictName) {
     }
 
 /**
-     * Dynamically fetch and cache a specific chunk for Monier-Williams Extended
-     * Uses mathematical routing: chunk = Math.ceil(id / 60000)
-     */
-/**
      * Dynamically fetch and cache a specific chunk for ANY chunked dictionary
      */
-    async fetchChunkedDictionary(dictName, id) {
+async fetchChunkedDictionary(dictName, id) {
         const dict = this.dictionaries.get(dictName);
         if (!dict) return null;
 
-        // Map dictionaries to their prefix and specific chunk size
         const dictConfig = {
             'Monier-Williams Extended': { prefix: 'mw', size: 60000 },
             'Apte Hindi':           { prefix: 'aptehindi', size: 38000 },
             'SKD':                  { prefix: 'skd', size: 6100 },
             'VCP':                  { prefix: 'vcp', size: 7000 },
-            
-            // The heavier dictionaries using smaller chunks
             'Monier-Williams':      { prefix: 'mw72', size: 30000 },
             'PW':                   { prefix: 'pw', size: 30000 },
             'PWG':                  { prefix: 'pwg', size: 30000 }
@@ -496,42 +489,61 @@ formatEntryCard(entry, index, dictName) {
         const config = dictConfig[dictName];
         if (!config) return null; 
 
-        const numericId = parseInt(id, 10);
-        
-        // Calculate chunk index dynamically based on the specific dictionary's size limit
+        // Ensure clean string for object lookup
+        const cleanId = String(id).trim(); 
+        const numericId = parseInt(cleanId, 10);
         const chunkIndex = Math.ceil(numericId / config.size);
         const chunkName = `${config.prefix}-${chunkIndex}`;
         
         if (!dict.loadedChunks) {
-            dict.loadedChunks = new Set();
+            dict.loadedChunks = new Map();
         }
         
         if (!dict.loadedChunks.has(chunkName)) {
-            dict.loadedChunks.add(chunkName);
-            
-            console.log(`Downloading missing chunk: ${chunkName}.json...`);
-            try {
-                const base = this.baseUrl || 'dictionaries';
-                const response = await fetch(`${base}/${chunkName}.json`);
+            const fetchPromise = (async () => {
+                const startTime = performance.now();
+                console.log(`[Network] ⏳ Starting download: ${chunkName}.json...`);
                 
-                if (!response.ok) {
-                    throw new Error(`HTTP Error: ${response.status}`);
-                }
+                try {
+                    const base = this.baseUrl || 'dictionaries';
+                    const response = await fetch(`${base}/${chunkName}.json`);
+                    
+                    if (!response.ok) throw new Error(`HTTP Error: ${response.status}`);
 
-                const chunkData = await response.json();
-                
-                // Bulletproof parsing
-                const textData = chunkData.data?.text || chunkData.data || chunkData;
-                Object.assign(dict.text, textData);
-                
-            } catch (err) {
-                console.error(`Failed to load ${chunkName}:`, err);
-                return null;
-            }
+                    const chunkData = await response.json();
+                    
+                    // Parse both old and new structural formats
+                    const textData = chunkData.data?.text || chunkData.data || chunkData;
+                    
+                    const entryCount = Object.keys(textData).length;
+                    const elapsed = ((performance.now() - startTime) / 1000).toFixed(2);
+                    
+                    // Merge new entries directly into the dictionary
+                    Object.assign(dict.text, textData);
+                    console.log(`[Network] ✅ Success: ${chunkName} loaded ${entryCount} entries in ${elapsed}s`);
+                    
+                } catch (err) {
+                    console.error(`[Network] ❌ Failed to load ${chunkName}:`, err);
+                    dict.loadedChunks.delete(chunkName);
+                }
+            })();
+            
+            dict.loadedChunks.set(chunkName, fetchPromise);
         }
         
-        return dict.text[id];
-    }}
+        // Wait for the download (if active) to finish
+        await dict.loadedChunks.get(chunkName);
+        
+        const resultText = dict.text[cleanId];
+        
+        // Diagnostic warning if the file downloaded but the word is missing
+        if (!resultText) {
+            console.warn(`[Data] ⚠️ Warning: ${chunkName} is ready, but ID '${cleanId}' was not found in dict.text!`);
+        }
+        
+        return resultText;
+    }
+}
 
 // Global instance
 window.DictionaryManager = new DictionaryManager();
