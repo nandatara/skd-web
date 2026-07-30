@@ -335,6 +335,8 @@ const IS_LOCAL = window.location.hostname === 'localhost' || window.location.hos
         let activeQuery = ''; 
         searchInput.addEventListener('input', debounce(async (e) => {
             const input = e.target.value.trim();
+
+            activeQuery = input;
             
             if (!input) {
                 devOutput.textContent = '-';
